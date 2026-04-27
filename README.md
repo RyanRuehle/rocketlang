@@ -861,19 +861,3 @@ Correct:
 ```txt
 RULE1 word reversed result
 ```
-
-## What To Explain During The Demo
-
-RocketLang is a simple line based interpreted language.
-
-The interpreter reads each line, splits it into tokens, checks the command, and runs the matching Python code.
-
-Variables are stored in a Python dictionary.
-
-`RULE1` is a general equality comparison command. The palindrome program uses `FLIP` and `RULE1` together.
-
-`KICKOFF` is a general divisibility command. The even program uses `KICKOFF number 2 result`.
-
-The transpiler reads the same RocketLang syntax but writes equivalent C code instead of running the program directly.
-
-The language has more than eight keywords and can run all seven required example programs.
