@@ -9,7 +9,14 @@ def get_value(token):
         return variables[token]
     return token
 
-def is_even_without_modulo(number):
+def is_integer(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+
+def is_even(number):
     
     #Check if a number is even without using the modulo operator.
     number = abs(number)
@@ -90,17 +97,19 @@ def run_file(filename):
                     variables[result_name] = "false"
 
             elif command == "KICKOFF":
-                # Check if a number is even and store "true" or "false" in variable
-                number = int(get_value(parts[1]))
+                value = get_value(parts[1])
                 result_name = parts[2]
 
-                if is_even_without_modulo(number):
-                    variables[result_name] = "true"
-                else:
-                    variables[result_name] = "false"
+                if is_integer(value):
+                    number = int(value)
 
-            else:
-                print(f"Error on line {line_number}: unknown command {command}")
+                    if is_even(number):
+                        variables[result_name] = "true"
+                    else:
+                        variables[result_name] = "false"
+                else:
+                    print("Input was not a number.")
+                    variables[result_name] = "false"
 
         except Exception as error:
             print(f"Error on line {line_number}: {error}")
