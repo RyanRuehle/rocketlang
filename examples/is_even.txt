@@ -1,0 +1,4 @@
+CHAT "Enter an integer:"
+QUEUE number
+KICKOFF number result
+CHAT result

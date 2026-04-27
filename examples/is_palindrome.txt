@@ -1,0 +1,4 @@
+CHAT "Enter a word:"
+QUEUE word
+RULE1 word result
+CHAT result

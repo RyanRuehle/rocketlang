@@ -1,0 +1,4 @@
+CHAT "Enter a word:"
+QUEUE word
+FLIP word result
+CHAT result

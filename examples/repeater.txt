@@ -1,0 +1,6 @@
+CHAT "Enter a character:"
+QUEUE char
+CHAT "Enter how many times to repeat it:"
+QUEUE count
+SPAM char count result
+CHAT result

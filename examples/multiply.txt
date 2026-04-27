@@ -1,0 +1,6 @@
+CHAT "Enter first single digit number:"
+QUEUE first
+CHAT "Enter second single digit number:"
+QUEUE second
+PINCH first second result
+CHAT result
