@@ -1,8 +1,6 @@
-RocketLang is a simple programming language that uses terms from the video game Rocket League. 
-
 # RocketLang
 
-RocketLang is a simple interpreted programming language with Rocket League themed commands. It was created for the CMSC 4513 Programming Languages final project.
+RocketLang is a simple programming language that uses terms from the video game Rocket League. 
 
 RocketLang supports:
 
