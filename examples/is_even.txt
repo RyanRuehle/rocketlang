@@ -1,4 +1,5 @@
 CHAT "Enter an integer:"
 QUEUE number
-KICKOFF number result
+BOOST divisor 2
+KICKOFF number divisor result
 CHAT result

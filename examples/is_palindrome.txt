@@ -1,4 +1,5 @@
 CHAT "Enter a word:"
 QUEUE word
-RULE1 word result
+FLIP word reversed
+RULE1 word reversed result
 CHAT result

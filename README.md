@@ -1,6 +1,8 @@
 # RocketLang
 
-RocketLang is a simple programming language that uses terms from the video game Rocket League. 
+RocketLang is a simple interpreted programming language that uses terms inspired by Rocket League.
+
+RocketLang is line based. Each line contains one command. The first word is the command, and the rest of the line contains the arguments for that command.
 
 RocketLang supports:
 
@@ -11,10 +13,10 @@ Printing
 String values
 Integer multiplication
 String concatenation
+Repeated concatenation
 String reversal
-Palindrome checking
-Even number checking
-Repeating characters
+Equality comparison
+Divisibility checking
 ```
 
 ## Project Files
@@ -36,15 +38,15 @@ output/
 
 ## Language Features
 
-RocketLang is line based. This means each line is one command.
+RocketLang programs are written in `.txt` files.
 
-Each command follows this basic format:
+Each line follows this basic format:
 
 ```txt
 COMMAND value1 value2 result
 ```
 
-The first word is the command. The values after it are the arguments for that command.
+The first word is the command. The values after it are arguments.
 
 Example:
 
@@ -74,15 +76,15 @@ CHAT "Hello"
 
 | Keyword | Meaning | Example |
 | --- | --- | --- |
-| CHAT | Prints a value | `CHAT "Hello World"` |
-| QUEUE | Gets user input | `QUEUE name` |
-| BOOST | Creates or updates a variable | `BOOST x 5` |
-| PINCH | Multiplies two numbers | `PINCH x y result` |
-| PASS | Combines two strings | `PASS first second result` |
-| SPAM | Repeats a character or string | `SPAM char count result` |
-| FLIP | Reverses a string | `FLIP word result` |
-| RULE1 | Checks if a string is a palindrome | `RULE1 word result` |
-| KICKOFF | Checks if an integer is even | `KICKOFF number result` |
+| `CHAT` | Prints a value | `CHAT "Hello World"` |
+| `QUEUE` | Gets user input and stores it in a variable | `QUEUE name` |
+| `BOOST` | Creates or updates a variable | `BOOST x 5` |
+| `PINCH` | Multiplies two values and stores the result | `PINCH x y result` |
+| `PASS` | Combines two values and stores the result | `PASS first second result` |
+| `SPAM` | Repeatedly concatenates a value a chosen number of times | `SPAM char count result` |
+| `FLIP` | Reverses a value and stores the result | `FLIP word result` |
+| `RULE1` | Compares two values and stores true if they are equal | `RULE1 first second result` |
+| `KICKOFF` | Checks if one integer is divisible by another integer | `KICKOFF number divisor result` |
 
 ## How To Run A RocketLang Program
 
@@ -183,7 +185,7 @@ Rocket
 
 ## Multiplication
 
-Use `PINCH` to multiply two numbers.
+Use `PINCH` to multiply two values.
 
 Format:
 
@@ -208,7 +210,7 @@ Output:
 
 ## String Concatenation
 
-Use `PASS` to combine two strings.
+Use `PASS` to combine two values.
 
 Format:
 
@@ -231,14 +233,14 @@ Output:
 RocketLeague
 ```
 
-## Repeating Characters
+## Repeated Concatenation
 
-Use `SPAM` to repeat a character or string.
+Use `SPAM` to repeatedly concatenate a value a chosen number of times.
 
 Format:
 
 ```txt
-SPAM character count result_variable
+SPAM value count result_variable
 ```
 
 Example:
@@ -256,14 +258,29 @@ Output:
 *****
 ```
 
+Another example:
+
+```txt
+BOOST word "ha"
+BOOST count 3
+SPAM word count result
+CHAT result
+```
+
+Output:
+
+```txt
+hahaha
+```
+
 ## Reversing A String
 
-Use `FLIP` to reverse a string.
+Use `FLIP` to reverse a value.
 
 Format:
 
 ```txt
-FLIP word result_variable
+FLIP value result_variable
 ```
 
 Example:
@@ -280,23 +297,22 @@ Output:
 olleh
 ```
 
-## Palindrome Checking
+## Equality Comparison
 
-Use `RULE1` to check if a word is a palindrome.
-
-A palindrome reads the same forward and backward.
+Use `RULE1` to compare two values.
 
 Format:
 
 ```txt
-RULE1 word result_variable
+RULE1 first_value second_value result_variable
 ```
 
 Example:
 
 ```txt
-BOOST word "racecar"
-RULE1 word result
+BOOST first "Rocket"
+BOOST second "Rocket"
+RULE1 first second result
 CHAT result
 ```
 
@@ -309,8 +325,9 @@ true
 Another example:
 
 ```txt
-BOOST word "hello"
-RULE1 word result
+BOOST first "Rocket"
+BOOST second "League"
+RULE1 first second result
 CHAT result
 ```
 
@@ -320,21 +337,22 @@ Output:
 false
 ```
 
-## Even Number Checking
+## Divisibility Checking
 
-Use `KICKOFF` to check if an integer is even.
+Use `KICKOFF` to check if one integer is divisible by another integer.
 
 Format:
 
 ```txt
-KICKOFF number result_variable
+KICKOFF number divisor result_variable
 ```
 
 Example:
 
 ```txt
-BOOST number 8
-KICKOFF number result
+BOOST number 15
+BOOST divisor 3
+KICKOFF number divisor result
 CHAT result
 ```
 
@@ -347,8 +365,9 @@ true
 Another example:
 
 ```txt
-BOOST number 9
-KICKOFF number result
+BOOST number 10
+BOOST divisor 3
+KICKOFF number divisor result
 CHAT result
 ```
 
@@ -358,7 +377,23 @@ Output:
 false
 ```
 
-The even check does not use the modulo operator. It repeatedly subtracts 2 until the number is either 0 or 1.
+If the input is not a number, RocketLang prints a message and stores `false`.
+
+Example:
+
+```txt
+BOOST number "k"
+BOOST divisor 2
+KICKOFF number divisor result
+CHAT result
+```
+
+Output:
+
+```txt
+Input was not a number.
+false
+```
 
 ## Required Example Programs
 
@@ -379,10 +414,9 @@ py interpreter.py examples/helloworld.txt
 ## cat.txt
 
 ```txt
-BOOST first "Rocket"
-BOOST second "League"
-PASS first second result
-CHAT result
+CHAT "Type something:"
+QUEUE text
+CHAT text
 ```
 
 Run it:
@@ -390,6 +424,20 @@ Run it:
 ```bash
 py interpreter.py examples/cat.txt
 ```
+
+Example input:
+
+```txt
+hello
+```
+
+Output:
+
+```txt
+hello
+```
+
+This works like a cat program because it copies user input directly to output.
 
 ## multiply.txt
 
@@ -451,6 +499,8 @@ Output:
 *****
 ```
 
+This program uses the general `SPAM` command to repeatedly concatenate a value.
+
 ## reverse_string.txt
 
 ```txt
@@ -483,7 +533,8 @@ olleh
 ```txt
 CHAT "Enter a word:"
 QUEUE word
-RULE1 word result
+FLIP word reversed
+RULE1 word reversed result
 CHAT result
 ```
 
@@ -505,12 +556,20 @@ Output:
 true
 ```
 
+This program does not use a special palindrome command. It uses two broader commands:
+
+```txt
+FLIP reverses the word.
+RULE1 compares the original word to the reversed word.
+```
+
 ## is_even.txt
 
 ```txt
 CHAT "Enter an integer:"
 QUEUE number
-KICKOFF number result
+BOOST divisor 2
+KICKOFF number divisor result
 CHAT result
 ```
 
@@ -523,6 +582,18 @@ py interpreter.py examples/is_even.txt
 Example input:
 
 ```txt
+8
+```
+
+Output:
+
+```txt
+true
+```
+
+Another example input:
+
+```txt
 9
 ```
 
@@ -531,6 +602,8 @@ Output:
 ```txt
 false
 ```
+
+This program does not use a special even command. It uses the broader `KICKOFF` divisibility command. A number is even if it is divisible by 2.
 
 ## Interpreter Explanation
 
@@ -553,7 +626,15 @@ Hello World
 
 The first token is the command. The rest are arguments.
 
-Variables are stored in a Python dictionary. When the interpreter sees a variable name, it checks the dictionary and gets the stored value.
+Variables are stored in a Python dictionary.
+
+Example:
+
+```python
+variables = {}
+```
+
+When the interpreter sees a variable name, it checks the dictionary and gets the stored value.
 
 For example:
 
@@ -563,6 +644,42 @@ CHAT word
 ```
 
 The interpreter stores `word` as `"hello"`, then prints it.
+
+## Token Explanation
+
+A token is one meaningful piece of a line.
+
+Example:
+
+```txt
+KICKOFF number divisor result
+```
+
+The tokens are:
+
+```txt
+KICKOFF
+number
+divisor
+result
+```
+
+The first token is the command. The remaining tokens are arguments.
+
+RocketLang uses `shlex.split` because it keeps quoted text together.
+
+Example:
+
+```txt
+CHAT "Hello World"
+```
+
+becomes:
+
+```txt
+CHAT
+Hello World
+```
 
 ## Transpiler Explanation
 
@@ -602,7 +719,34 @@ Example:
 char name[256];
 ```
 
-The transpiler also generates a C helper function called `is_even_without_modulo`. This checks if a number is even without using `%`.
+The transpiler also generates helper functions in C.
+
+`is_integer_string` checks whether a string is a valid integer.
+
+`is_divisible` checks whether one integer is divisible by another integer.
+
+Example generated C helper:
+
+```c
+int is_divisible(int number, int divisor) {
+    if (divisor == 0) return 0;
+    return number % divisor == 0;
+}
+```
+
+## How RocketLang Commands Map To C
+
+```txt
+CHAT becomes printf.
+QUEUE becomes scanf.
+BOOST becomes strcpy.
+PINCH becomes atoi, multiplication, and sprintf.
+PASS becomes strcpy and strcat.
+SPAM becomes a loop with strcat.
+FLIP becomes a loop that copies a string backward.
+RULE1 becomes strcmp.
+KICKOFF becomes is_integer_string, atoi, and is_divisible.
+```
 
 ## How To Transpile A RocketLang Program To C
 
@@ -689,3 +833,47 @@ Correct:
 ```txt
 BOOST my_name "Ryan"
 ```
+
+Wrong:
+
+```txt
+KICKOFF number result
+```
+
+`KICKOFF` needs a number, a divisor, and a result variable.
+
+Correct:
+
+```txt
+KICKOFF number divisor result
+```
+
+Wrong:
+
+```txt
+RULE1 word result
+```
+
+`RULE1` needs two values to compare and a result variable.
+
+Correct:
+
+```txt
+RULE1 word reversed result
+```
+
+## What To Explain During The Demo
+
+RocketLang is a simple line based interpreted language.
+
+The interpreter reads each line, splits it into tokens, checks the command, and runs the matching Python code.
+
+Variables are stored in a Python dictionary.
+
+`RULE1` is a general equality comparison command. The palindrome program uses `FLIP` and `RULE1` together.
+
+`KICKOFF` is a general divisibility command. The even program uses `KICKOFF number 2 result`.
+
+The transpiler reads the same RocketLang syntax but writes equivalent C code instead of running the program directly.
+
+The language has more than eight keywords and can run all seven required example programs.

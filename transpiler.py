@@ -27,21 +27,29 @@ def transpile_file(input_file, output_file):
     lines_out.append("#include <stdlib.h>")
     lines_out.append("")
 
-    # This helper function is added to the generated C code.
-    # It checks if a number is even without using the modulo operator.
-    lines_out.append("int is_even_without_modulo(int number) {")
-    lines_out.append("    if (number < 0) number = -number;")
-    lines_out.append("    while (number > 1) {")
-    lines_out.append("        number = number - 2;")
+    # This helper function checks whether a C string is a valid integer.
+    lines_out.append("int is_integer_string(char text[]) {")
+    lines_out.append("    int i = 0;")
+    lines_out.append("    if (text[0] == '\\0') return 0;")
+    lines_out.append("    if (text[0] == '-' && text[1] != '\\0') i = 1;")
+    lines_out.append("    for (; text[i] != '\\0'; i++) {")
+    lines_out.append("        if (text[i] < '0' || text[i] > '9') return 0;")
     lines_out.append("    }")
-    lines_out.append("    return number == 0;")
+    lines_out.append("    return 1;")
+    lines_out.append("}")
+    lines_out.append("")
+
+    # This helper function checks divisibility using modulo.
+    lines_out.append("int is_divisible(int number, int divisor) {")
+    lines_out.append("    if (divisor == 0) return 0;")
+    lines_out.append("    return number % divisor == 0;")
     lines_out.append("}")
     lines_out.append("")
 
     # Start the C main function.
     lines_out.append("int main() {")
 
-    # temp is used for operations like reversing strings and checking palindromes.
+    # temp is used for operations like reversing strings.
     lines_out.append("    char temp[256];")
 
     # body_lines stores the C statements created from RocketLang commands.
@@ -186,36 +194,35 @@ def transpile_file(input_file, output_file):
             body_lines.append("    }")
             body_lines.append(f"    {result}[len_{result}] = '\\0';")
 
-        # RULE1 checks if a string is a palindrome.
-        # A palindrome reads the same forward and backward.
-        # RocketLang: RULE1 word result
-        # C: compares characters from the front and back.
+        # RULE1 checks if two values are equal.
+        # RocketLang: RULE1 first second result
+        # C: compares the two strings with strcmp.
         elif command == "RULE1":
-            word = parts[1]
-            result = parts[2]
+            first = parts[1]
+            second = parts[2]
+            result = parts[3]
             variables.add(result)
 
-            if word in variables:
-                word_value = word
+            if first in variables:
+                left = first
             else:
-                word_value = f'"{c_string(word)}"'
+                left = f'"{c_string(first)}"'
 
-            body_lines.append(f"    strcpy(temp, {word_value});")
-            body_lines.append(f"    int len_{result} = strlen(temp);")
-            body_lines.append(f"    int same_{result} = 1;")
-            body_lines.append(f"    for (int i = 0; i < len_{result}; i++) {{")
-            body_lines.append(f"        if (temp[i] != temp[len_{result} - i - 1]) same_{result} = 0;")
-            body_lines.append("    }")
-            body_lines.append(f'    if (same_{result}) strcpy({result}, "true");')
+            if second in variables:
+                right = second
+            else:
+                right = f'"{c_string(second)}"'
+
+            body_lines.append(f'    if (strcmp({left}, {right}) == 0) strcpy({result}, "true");')
             body_lines.append(f'    else strcpy({result}, "false");')
 
-        # KICKOFF checks if a number is even.
-        # It calls the generated C helper function instead of using modulo.
-        # RocketLang: KICKOFF number result
-        # C: if even, stores "true", otherwise stores "false".
+        # KICKOFF checks if one integer is divisible by another.
+        # RocketLang: KICKOFF number divisor result
+        # C: validates both values, then calls is_divisible.
         elif command == "KICKOFF":
             number = parts[1]
-            result = parts[2]
+            divisor = parts[2]
+            result = parts[3]
             variables.add(result)
 
             if number in variables:
@@ -223,7 +230,20 @@ def transpile_file(input_file, output_file):
             else:
                 number_value = f'"{c_string(number)}"'
 
-            body_lines.append(f'    if (is_even_without_modulo(atoi({number_value}))) strcpy({result}, "true");')
+            if divisor in variables:
+                divisor_value = divisor
+            else:
+                divisor_value = f'"{c_string(divisor)}"'
+
+            body_lines.append(f'    if (!is_integer_string({number_value}) || !is_integer_string({divisor_value})) {{')
+            body_lines.append('        printf("%s\\n", "Input was not a number.");')
+            body_lines.append(f'        strcpy({result}, "false");')
+            body_lines.append("    }")
+            body_lines.append(f'    else if (atoi({divisor_value}) == 0) {{')
+            body_lines.append('        printf("%s\\n", "Cannot divide by zero.");')
+            body_lines.append(f'        strcpy({result}, "false");')
+            body_lines.append("    }")
+            body_lines.append(f'    else if (is_divisible(atoi({number_value}), atoi({divisor_value}))) strcpy({result}, "true");')
             body_lines.append(f'    else strcpy({result}, "false");')
 
         # If the command is not recognized, print an error in the Python transpiler.

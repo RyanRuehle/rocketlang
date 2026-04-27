@@ -16,15 +16,11 @@ def is_integer(value):
     except ValueError:
         return False
 
-def is_even(number):
-    
-    #Check if a number is even without using the modulo operator.
-    number = abs(number)
+def is_divisible(number, divisor):
+    if divisor == 0:
+        return False
 
-    while number > 1:
-        number = number - 2
-
-    return number == 0
+    return number % divisor == 0
 
 def run_file(filename):
     with open(filename, "r") as file:
@@ -62,7 +58,7 @@ def run_file(filename):
                 first = int(get_value(parts[1]))
                 second = int(get_value(parts[2]))
                 result_name = parts[3]
-                variables[result_name] = str(first * second)
+                variables[result_name] = first * second
 
             elif command == "PASS":
                 # Concatenate two strings and store result in variable
@@ -85,25 +81,29 @@ def run_file(filename):
                 variables[result_name] = word[::-1]
 
             elif command == "RULE1":
-                # Check if a string is a palindrome and store "true" or "false" in variable
-                word = get_value(parts[1])
-                result_name = parts[2]
+                # Check if two values are equal and store "true" or "false"
+                first = get_value(parts[1])
+                second = get_value(parts[2])
+                result_name = parts[3]
 
-                reversed_word = word[::-1]
-
-                if word == reversed_word:
+                if first == second:
                     variables[result_name] = "true"
                 else:
                     variables[result_name] = "false"
 
             elif command == "KICKOFF":
-                value = get_value(parts[1])
-                result_name = parts[2]
+                number_value = get_value(parts[1])
+                divisor_value = get_value(parts[2])
+                result_name = parts[3]
 
-                if is_integer(value):
-                    number = int(value)
+                if is_integer(number_value) and is_integer(divisor_value):
+                    number = int(number_value)
+                    divisor = int(divisor_value)
 
-                    if is_even(number):
+                    if divisor == 0:
+                        print("Cannot divide by zero.")
+                        variables[result_name] = "false"
+                    elif is_divisible(number, divisor):
                         variables[result_name] = "true"
                     else:
                         variables[result_name] = "false"
