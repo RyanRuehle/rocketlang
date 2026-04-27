@@ -1,4 +1,3 @@
-BOOST first "Rocket"
-BOOST second "League"
-PASS first second result
-CHAT result
+CHAT "Type something:"
+QUEUE text
+CHAT text
